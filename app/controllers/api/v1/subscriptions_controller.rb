@@ -13,7 +13,7 @@ class Api::V1::SubscriptionsController < ApplicationController
     if subscription.save
       render json: SubscriptionSerializer.new(subscription)
     else
-      # render error
+      render json: { errors: 'Subscription not saved. Missing required information.' }, status: :bad_request
     end
   end
 

@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'API V1 Subscriptions Controller', type: :request do
+RSpec.describe 'Subscriptions API', type: :request do
   describe 'subscriptions controller create action' do
     before(:each) do
       Customer.destroy_all
