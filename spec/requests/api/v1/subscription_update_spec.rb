@@ -39,7 +39,6 @@ RSpec.describe 'API V1 Subscriptions Controller', type: :request do
       expect(response.body).to eq("{\"errors\":\"Subscription ID missing\"}")
     end
 
-
     # Return error if status already 'cancelled' ?
   end
 end
