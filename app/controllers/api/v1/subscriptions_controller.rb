@@ -3,30 +3,30 @@ class Api::V1::SubscriptionsController < ApplicationController
   
   def index
     subscriptions = Subscription.where(customer_id: params[:customer_id])
-    render json: SubscriptionSerializer.new(subscriptions)
-    # add error
+    if subscriptions.empty?
+      render json: {message: "No subscriptions for this customer."}
+    else
+      render json: SubscriptionSerializer.new(subscriptions)
+    end
   end
 
   def create
-    customer = Customer.find(params[:customer_id])
+    customer = Customer.find(params[:customer_id]) # Is this necessary? Can just do Subscription.new on next line
     subscription = customer.subscriptions.new(subscription_params)
     if subscription.save
-      render json: SubscriptionSerializer.new(subscription)
+      render json: SubscriptionSerializer.new(subscription), status: :created
     else
       render json: { errors: 'Subscription not saved. Missing required information.' }, status: :bad_request
     end
   end
 
   def update
-    # update status to cancelled
-    # find subscription
+    # update status to 'cancelled'
     subscription = Subscription.find_by(params[:subscription_id])
     if subscription.nil?
-      # render error
-
-      # other errors? check sad path tests
+      render json: { errors: 'No such subscription exists.' }, status: :bad_request
     else
-      subscription.status = "cancelled"
+      subscription = Subscription.update(status: "cancelled")
       subscription.save
       render json: SubscriptionSerializer.new(subscription)
     end

@@ -22,7 +22,7 @@ RSpec.describe 'Subscriptions API', type: :request do
       }
       subscription = JSON.parse(response.body, symbolize_names: true)
       expect(response).to be_successful
-      expect(response.status).to eq(200) # How can get 201 ?
+      expect(response.status).to eq(201)
       expect(subscription[:data].count).to eq(4)
       expect(subscription[:data][:attributes][:title]).to eq('Tea of the Month')
     end
