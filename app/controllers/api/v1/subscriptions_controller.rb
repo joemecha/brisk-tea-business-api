@@ -1,15 +1,17 @@
 class Api::V1::SubscriptionsController < ApplicationController
-  before_action :set_customer, only: %i[index create update]
+  # before_action :set_customer, only: %i[index create update]
   
   def index
     subscriptions = Subscription.where(customer_id: params[:customer_id])
-    # serializer here
+    render json: SubscriptionSerializer.new(subscriptions)
+    # add error
   end
 
   def create
-    subscription = @customer.subscriptions.new(subscription_params)
+    customer = Customer.find(params[:customer_id])
+    subscription = customer.subscriptions.new(subscription_params)
     if subscription.save
-      # serializer
+      render json: SubscriptionSerializer.new(subscription)
     else
       # render error
     end
@@ -18,7 +20,7 @@ class Api::V1::SubscriptionsController < ApplicationController
   def update
     # update status to cancelled
     # find subscription
-    subscription = Subscription.find(params[:id])
+    subscription = Subscription.find_by(params[:subscription_id])
     if subscription.nil?
       # render error
 
@@ -26,7 +28,7 @@ class Api::V1::SubscriptionsController < ApplicationController
     else
       subscription.status = "cancelled"
       subscription.save
-      # render response with serializer
+      render json: SubscriptionSerializer.new(subscription)
     end
   end
 
@@ -36,7 +38,7 @@ class Api::V1::SubscriptionsController < ApplicationController
     params.permit(:title, :price, :status, :frequency, :customer_id)
   end
 
-  def set_customer
-    @customer = Customer.find_by(id: params[:id])
-  end
+  # def set_customer
+  #   @customer = Customer.find_by(id: params[:customer_id])
+  # end
 end
