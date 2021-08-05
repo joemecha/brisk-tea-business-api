@@ -1,13 +1,12 @@
 class Api::V1::CustomerSubscriptionsController < ApplicationController
-  # before_action :set_customer, only: %i[index create update]
-  
-  def index
-    # customer_subscriptions = Subscription.where(customer_id: params[:customer_id])
-    # if subscriptions.empty?
-    #   render json: {message: "No subscriptions for this customer."}
-    # else
-    #   render json: SubscriptionSerializer.new(subscriptions)
-    # end
+  def show
+    customer = Customer.find(params[:id])
+    subscriptions = customer.subscriptions
+    if subscriptions.empty?
+      render json: {message: "There are no subscriptions for this customer."}
+    else
+      render json: SubscriptionSerializer.new(subscriptions)
+    end
   end
 
   def create
