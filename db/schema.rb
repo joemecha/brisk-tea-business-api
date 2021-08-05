@@ -10,10 +10,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_08_03_004330) do
+ActiveRecord::Schema.define(version: 2021_08_04_164352) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "customer_subscriptions", force: :cascade do |t|
+    t.string "status", default: "active"
+    t.bigint "customer_id"
+    t.bigint "subscription_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["customer_id"], name: "index_customer_subscriptions_on_customer_id"
+    t.index ["subscription_id"], name: "index_customer_subscriptions_on_subscription_id"
+  end
 
   create_table "customers", force: :cascade do |t|
     t.string "first_name"
@@ -28,6 +38,7 @@ ActiveRecord::Schema.define(version: 2021_08_03_004330) do
   end
 
   create_table "subscription_teas", force: :cascade do |t|
+    t.string "status", default: "active"
     t.bigint "subscription_id"
     t.bigint "tea_id"
     t.datetime "created_at", null: false
@@ -39,12 +50,10 @@ ActiveRecord::Schema.define(version: 2021_08_03_004330) do
   create_table "subscriptions", force: :cascade do |t|
     t.string "title"
     t.integer "price"
-    t.string "status"
-    t.string "frequency"
-    t.bigint "customer_id"
+    t.string "status", default: "active"
+    t.integer "frequency"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["customer_id"], name: "index_subscriptions_on_customer_id"
   end
 
   create_table "teas", force: :cascade do |t|
@@ -56,7 +65,8 @@ ActiveRecord::Schema.define(version: 2021_08_03_004330) do
     t.datetime "updated_at", null: false
   end
 
+  add_foreign_key "customer_subscriptions", "customers"
+  add_foreign_key "customer_subscriptions", "subscriptions"
   add_foreign_key "subscription_teas", "subscriptions"
   add_foreign_key "subscription_teas", "teas"
-  add_foreign_key "subscriptions", "customers"
 end
