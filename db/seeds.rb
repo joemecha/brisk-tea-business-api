@@ -25,10 +25,10 @@ customer_subscription_1 = CustomerSubscription.create(customer_id: 1, subscripti
 customer_subscription_2 = CustomerSubscription.create(customer_id: 2, subscription_id: 2)
 customer_subscription_3 = CustomerSubscription.create(customer_id: 3, subscription_id: 3)
 customer_subscription_4 = CustomerSubscription.create(customer_id: 4, subscription_id: 4)
-customer_subscription_5 = CustomerSubscription.create(customer_id: 5, subscription_id: 5, status: "cancelled")
+customer_subscription_5 = CustomerSubscription.create(customer_id: 5, subscription_id: 5)
 
-customer_subscription_6 = CustomerSubscription.create(customer_id: 1, subscription_id: 6, status: "cancelled")
-customer_subscription_7 = CustomerSubscription.create(customer_id: 2, subscription_id: 7, status: "cancelled")
+customer_subscription_6 = CustomerSubscription.create(customer_id: 1, subscription_id: 6)
+customer_subscription_7 = CustomerSubscription.create(customer_id: 2, subscription_id: 7)
 customer_subscription_8 = CustomerSubscription.create(customer_id: 3, subscription_id: 8)
 customer_subscription_9 = CustomerSubscription.create(customer_id: 4, subscription_id: 9)
 customer_subscription_10 = CustomerSubscription.create(customer_id: 5, subscription_id: 10)
