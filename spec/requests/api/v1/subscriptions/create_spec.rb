@@ -1,44 +1,42 @@
 require 'rails_helper'
 
-RSpec.describe 'Subscriptions API', type: :request do
-  describe 'subscriptions controller create action' do
+RSpec.describe 'Customer_Subscriptions API', type: :request do
+  describe 'customer_subscriptions controller create action' do
     before(:each) do
       Customer.destroy_all
       Tea.destroy_all
 
       @customer1 = create(:customer)
-      @subscription1a = create(:subscription, status: "active", customer_id: @customer1.id)
+      @subscription1 = create(:subscription, status: "active")
       @tea1 = create(:tea)
-      @subscription_tea1 = create(:subscription_tea, subscription_id: @subscription1a.id, tea_id: @tea1.id)
+      @subscription_tea1 = create(:subscription_tea, subscription_id: @subscription1.id, tea_id: @tea1.id)
     end
     
     # Happy Path
     it 'can render response for creation of new subscription' do
-      post '/api/v1/subscriptions', params: {title: "Tea of the Month",
-        price: 2000,
-        status: "active",
-        frequency: "monthly",
-        customer_id: @customer1.id
-      }
+      post '/api/v1/customer_subscriptions', params: {customer_id: @customer1.id,
+                                             subscription_id: @subscription1.id
+                                            }
       subscription = JSON.parse(response.body, symbolize_names: true)
       expect(response).to be_successful
       expect(response.status).to eq(201)
-      expect(subscription[:data].count).to eq(4)
-      expect(subscription[:data][:attributes][:title]).to eq('Tea of the Month')
+      expect(subscription[:data].count).to eq(3)
+      expect(subscription[:data][:type]).to eq("customer_subscription")
+      expect(subscription[:data][:attributes].count).to eq(3)
+      expect(subscription[:data][:attributes]).to have_key(:customer_id)
+      expect(subscription[:data][:attributes]).to have_key(:subscription_id)
+      expect(subscription[:data][:attributes]).to have_key(:status)
     end
 
     # Sad Paths
     it 'can render error if params missing' do
-      post "/api/v1/subscriptions/", params: {title: '',
-                                             price: nil,
-                                             status: 'active',
-                                             frequency: nil,
-                                             customer_id: @customer1.id
-                                            }
+      post "/api/v1/customer_subscriptions/", params: {customer_id: @customer1.id,
+                                                       subscription_id: ""
+                                                      }
       subscription = JSON.parse(response.body, symbolize_names: true)
       expect(response).to_not be_successful
       expect(response.status).to eq(400)
-      expect(response.body).to eq("{\"errors\":\"Subscription not saved. Missing required information.\"}")
+      expect(response.body).to eq("{\"errors\":\"Requires valid customer ID and subscription ID.\"}")
     end
   end
 end
