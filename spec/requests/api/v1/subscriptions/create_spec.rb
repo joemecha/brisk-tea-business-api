@@ -4,12 +4,14 @@ RSpec.describe 'Customer_Subscriptions API', type: :request do
   describe 'customer_subscriptions controller create action' do
     before(:each) do
       Customer.destroy_all
-      Tea.destroy_all
+      # Tea.destroy_all
 
       @customer1 = create(:customer)
       @subscription1 = create(:subscription, status: "active")
-      @tea1 = create(:tea)
-      @subscription_tea1 = create(:subscription_tea, subscription_id: @subscription1.id, tea_id: @tea1.id)
+
+      # For planned extensions
+      # @tea1 = create(:tea)
+      # @subscription_tea1 = create(:subscription_tea, subscription_id: @subscription1.id, tea_id: @tea1.id)
     end
     
     # Happy Path

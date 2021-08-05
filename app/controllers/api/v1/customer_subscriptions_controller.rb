@@ -11,23 +11,23 @@ class Api::V1::CustomerSubscriptionsController < ApplicationController
   end
 
   def create
-    customer_subscription = CustomerSubscription.create(customer_subscription_params)
-    if customer_subscription.save
-      render json: CustomerSubscriptionSerializer.new(customer_subscription), status: :created
+    customer_sub = CustomerSubscription.create(customer_subscription_params)
+    if customer_sub.save
+      render json: CustomerSubscriptionSerializer.new(customer_sub), status: :created
     else
       render json: { errors: 'Requires valid customer ID and subscription ID.' }, status: :bad_request
     end
   end
 
   def update
-    # update status to 'cancelled'
-    if params[:customer_id].present? && params[:subscription_id].present?
-      customer_subscription = CustomerSubscription.find_by(customer_subscription_params)
+    customer_sub = CustomerSubscription.find(params[:id])
+    if params[:customer_subscription][:customer_id].present? && params[:customer_subscription][:subscription_id].present?
+      customer_sub = CustomerSubscription.find_by(customer_subscription_params)
       
-      customer_subscription.cancel
-      render json: CustomerSubscriptionSerializer.new(customer_subscription)
-    else
-      render json: { errors: 'Requires valid customer ID and subscription ID.' }, status: :bad_request
+      cancelled_sub = CustomerSubscription.update(customer_sub.id, status: 'cancelled')
+      render json: CustomerSubscriptionSerializer.new(cancelled_sub)
+    elsif 
+      render json: { errors: 'Requires valid IDs for customer and subscription.' }, status: :bad_request
     end
   end
 
