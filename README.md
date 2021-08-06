@@ -9,7 +9,6 @@ BriskTea Business is a RESTful back-end API which exposes Tea Subscription data.
 [**Project Design**](#project-design) |
 [**Setup**](#setup) |
 [**Endpoints**](#endpoints) |
-[**Examples**](#examples) |
 [**Tests**](#running-the-tests) |
 [**Developer**](#developer) |
 <!-- [**Deployment**](#deployment) | -->
@@ -37,101 +36,103 @@ If you are running this API locally, follow the steps below:
 
 ## Endpoints
 The following are all API endpoints. Note, some endpoints have optional or required query parameters.
-- All endpoints run off base connector http://localhost:3000 on local 
-<!-- or https://???.herokuapp.com/ on Heroku -->
+
+~ All endpoints run off base connector http://localhost:3000 ~ 
 
 
-### Endpoint to subscribe a customer to a tea subscription:
-
-| Method   | URL                                      | Description                              |
+| Method   | URI                                      | Description                              |
 | -------- | ---------------------------------------- | ---------------------------------------- |
 | `POST`   | `/api/v1/customer_subscriptions`         | Create a customer subscription.          |
-__required parameters:__ customer id, subscription id
-
-
-### Endpoint to cancel a customer’s tea subscription:
-
-| Method   | URL                                      | Description                              |
-| -------- | ---------------------------------------- | ---------------------------------------- |
 | `PATCH`  | `/api/v1/customer_subscriptions/:id`     | Customer subscription to status 'cancelled'.  |
-__required parameters:__ customer_subscription id, customer id, subscription id
+| `GET`    | `/api/v1/customer_subscriptions/:customer_id`     | Retrieve all subscriptions for a single customer.  |
 
 
-### Endpoint to see all of a customer’s subsciptions (active and cancelled):
+#### Endpoint to subscribe a customer to a tea subscription:
+POST `http://localhost:3000/api/v1/customer_subscription`, 
 
-| Method   | URL                                      | Description                              |
-| -------- | ---------------------------------------- | ---------------------------------------- |
-| `GET`    | `/api/v1/customer_subscriptions/:id`     | Retrieve all subscriptions for a single customer.              |
-__required parameters:__ customer id, as ':id'
+body:
+```
+json 
+{
+  "customer_id": "1",
+  "subscription_id": "1"
+}
+```
 
-
-## Examples
-
-### A new customer subscription:
-
+response: 
 ```
 {
     "data": {
-        "id": "12",
+        "id": "1",
         "type": "customer_subscription",
         "attributes": {
-            "customer_id": 1,
-            "subscription_id": 2,
+            "id": "1",
+            "customer_id": "1",
+            "subscription_id": "1",
             "status": "active"
         }
     }
 }
 ```
 
-### All subscriptions for a customer:
 
+#### Endpoint to cancel a customer’s tea subscription:
+PATCH/PUT `http://localhost:3000/api/v1/customer_subscription/:customer_id`
+
+body:
+```
+json 
+{
+  "customer_id": "1",
+  "subscription_id": "2"
+}
+```
+
+response: 
 ```
 {
-    "data": [
-        {
-            "id": "1",
-            "type": "subscription",
-            "attributes": {
-                "title": "Dark Star Cerasse Tea Box",
-                "price": 6300,
-                "status": "active",
-                "frequency": 12
-            },
-            "relationships": {
-                "teas": {
-                    "data": [
-                        {
-                            "id": "1",
-                            "type": "tea"
-                        }
-                    ]
-                }
-            }
-        },
-        {
-            "id": "6",
-            "type": "subscription",
-            "attributes": {
-                "title": "Jack Straw Yi Zhen Bai Hao Tea Box",
-                "price": 6900,
-                "status": "active",
-                "frequency": 12
-            },
-            "relationships": {
-                "teas": {
-                    "data": [
-                        {
-                            "id": "6",
-                            "type": "tea"
-                        }
-                    ]
-                }
-            }
+    "data": {
+        "id": "2",
+        "type": "customer_subscription",
+        "attributes": {
+            "customer_id": "1",
+            "subscription_id": "2",
+            "status": "cancelled"
         }
-    ]
+    }
 }
-
 ```
+
+
+#### Endpoint to see all of a customer’s subsciptions (active and cancelled):
+GET `http://localhost:3000/api/v1/customer_subscription/:customer_id`
+
+response: 
+```
+{
+    "data": ["data": {
+        "id": "1",
+        "type": "subscription",
+        "attributes": {
+            "id": "1",
+            "title": "Cassidy Gongmei Tea Box"
+            "price": "6400"
+            "status": "active"
+            "frequency": "6"
+        }, 
+        "id": "2",
+        "type": "subscription",
+        "attributes": {
+            "id": "2",
+            "title": "Ripple Valerian Tea Box"
+            "price": "3700"
+            "status": "cancelled"
+            "frequency": "6"
+        } 
+    }]
+}
+```
+
 
 ## Running the Tests
 
@@ -145,4 +146,4 @@ Run all tests in application with `bundle exec rspec`. When test is complete, ru
 
 
 ## Developer
-* Joe Mecha [GitHub](https://github.com/joemecha) • [LinkedIn](https://www.linkedin.com/in/joemecha/)
+### Joe Mecha  [GitHub](https://github.com/joemecha) • [LinkedIn](https://www.linkedin.com/in/joemecha/)
