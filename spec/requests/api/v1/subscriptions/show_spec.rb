@@ -40,12 +40,9 @@ RSpec.describe 'Customer Subscriptions API', type: :request do
       expect(subscriptions[:data].first[:attributes][:title]).to eq(@subscription1.title)
       expect(subscriptions[:data].first[:attributes][:price]).to eq(@subscription1.price)
       expect(subscriptions[:data].first[:attributes][:frequency]).to eq(@subscription1.frequency)
-      expect(subscriptions[:data].first[:relationships][:teas][:data].first[:id].to_i).to eq(@tea1.id)
       expect(subscriptions[:data].last[:attributes][:title]).to eq(@subscription3.title)
       expect(subscriptions[:data].last[:attributes][:price]).to eq(@subscription3.price)
       expect(subscriptions[:data].last[:attributes][:frequency]).to eq(@subscription3.frequency)
-      expect(subscriptions[:data].last[:relationships][:teas][:data].first[:id].to_i).to eq(@tea3.id)
-      # expect to not_have (customer2's subscription)
     end
     
     # Sad Paths    
