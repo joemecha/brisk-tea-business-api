@@ -10,16 +10,17 @@ class Api::V1::CustomerSubscriptionsController < ApplicationController
   end
 
   def create
-    customer_sub = CustomerSubscription.create(customer_subscription_params)
-    if customer_sub.save
-      render json: CustomerSubscriptionSerializer.new(customer_sub), status: :created
+    new_customer_subscription = CustomerSubscription.create(customer_subscription_params)
+
+    if new_customer_subscription.save
+      render json: CustomerSubscriptionSerializer.new(new_customer_subscription), status: :created
     else
       render json: { errors: 'Requires valid customer ID and subscription ID.' }, status: :bad_request
     end
   end
 
   def update
-    CustomerSubscription.find(params[:id])
+    CustomerSubscription.find(customer_subscription_params)
     if params[:customer_subscription][:customer_id].present? && params[:customer_subscription][:subscription_id].present?
       customer_sub = CustomerSubscription.find_by(customer_subscription_params)
 
@@ -33,6 +34,6 @@ class Api::V1::CustomerSubscriptionsController < ApplicationController
   private
 
   def customer_subscription_params
-    params.permit(:customer_id, :subscription_id)
+    params.require(:customer_subscription).permit(:customer_id, :subscription_id)
   end
 end

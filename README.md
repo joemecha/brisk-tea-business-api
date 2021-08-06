@@ -36,7 +36,8 @@ If you are running this API locally, follow the steps below:
 
 ## Endpoints
 The following are all API endpoints. Note, some endpoints have optional or required query parameters.
-- All endpoints run off base connector http://localhost:3000 on local 
+
+~ All endpoints run off base connector http://localhost:3000 ~ 
 
 
 | Method   | URI                                      | Description                              |
@@ -48,14 +49,16 @@ The following are all API endpoints. Note, some endpoints have optional or requi
 
 #### Endpoint to subscribe a customer to a tea subscription:
 POST `http://localhost:3000/api/v1/customer_subscription`, 
+
 body:
 ```
 json 
 {
   "customer_id": "1",
-  "subscription_id": "1",
+  "subscription_id": "1"
 }
 ```
+
 response: 
 ```
 {
@@ -64,8 +67,8 @@ response:
         "type": "customer_subscription",
         "attributes": {
             "id": "1",
-            "customer_id": "1"
-            "subscription_id": "1"
+            "customer_id": "1",
+            "subscription_id": "1",
             "status": "active"
         }
     }
@@ -75,26 +78,26 @@ response:
 
 #### Endpoint to cancel a customer’s tea subscription:
 PATCH/PUT `http://localhost:3000/api/v1/customer_subscription/:customer_id`
+
 body:
 ```
 json 
 {
   "customer_id": "1",
-  "subscription_id": "2",
+  "subscription_id": "2"
 }
 ```
+
 response: 
 ```
 {
     "data": {
         "id": "2",
-        "type": "subscription",
+        "type": "customer_subscription",
         "attributes": {
-            "id": "2",
-            "title": "Ripple Valerian Tea Box"
-            "price": "3700"
-            "status": "Cancelled"
-            "frequency": "6"
+            "customer_id": "1",
+            "subscription_id": "2",
+            "status": "cancelled"
         }
     }
 }
@@ -102,7 +105,8 @@ response:
 
 
 #### Endpoint to see all of a customer’s subsciptions (active and cancelled):
-GET `http://localhost:3000/api/v1/customer_subscription/1`
+GET `http://localhost:3000/api/v1/customer_subscription/:customer_id`
+
 response: 
 ```
 {
@@ -142,4 +146,4 @@ Run all tests in application with `bundle exec rspec`. When test is complete, ru
 
 
 ## Developer
-* Joe Mecha [GitHub](https://github.com/joemecha) • [LinkedIn](https://www.linkedin.com/in/joemecha/)
+### Joe Mecha  [GitHub](https://github.com/joemecha) • [LinkedIn](https://www.linkedin.com/in/joemecha/)

@@ -51,7 +51,7 @@ RSpec.describe 'Customer_Subscriptions API', type: :request do
       expect(customer_subscription).to be_a(Hash)
       expect(customer_subscription[:data].count).to eq(3)
       expect(customer_subscription[:data][:type]).to eq("customer_subscription")
-      expect(customer_subscription[:data][:attributes].count).to eq(3)
+      expect(customer_subscription[:data][:attributes].count).to eq(4)
       expect(customer_subscription[:data][:attributes]).to have_key(:customer_id)
       expect(customer_subscription[:data][:attributes]).to have_key(:subscription_id)
     end
@@ -60,7 +60,7 @@ RSpec.describe 'Customer_Subscriptions API', type: :request do
     it 'can render an error message if missing a required parameter in the request body' do
 
       customer_subscription_params = ({
-        customer_id: @customer_id,
+        customer_id: @customer1.id,
         subscription_id: ""
         })
 
@@ -75,7 +75,7 @@ RSpec.describe 'Customer_Subscriptions API', type: :request do
       error = JSON.parse(response.body, symbolize_names: true)
 
       expect(error).to be_a(Hash)
-      expect(error[:error]).to eq("Requires valid customer ID and subscription ID.")
+      expect(error[:errors]).to eq("Requires valid customer ID and subscription ID.")
     end
 
     it 'can render an error message if an id does not match an existing customer' do
@@ -95,7 +95,7 @@ RSpec.describe 'Customer_Subscriptions API', type: :request do
       error = JSON.parse(response.body, symbolize_names: true)
 
       expect(error).to be_a(Hash)
-      expect(error[:error]).to eq("Customer with ID='999' does not exist.")
+      expect(error[:errors]).to eq("Requires valid customer ID and subscription ID.")
     end
     
     it 'can render an error message if an id does not match an existing subscription' do
@@ -115,7 +115,7 @@ RSpec.describe 'Customer_Subscriptions API', type: :request do
       error = JSON.parse(response.body, symbolize_names: true)
 
       expect(error).to be_a(Hash)
-      expect(error[:error]).to eq("Subscription with ID='999' does not exist.")
+      expect(error[:errors]).to eq("Requires valid customer ID and subscription ID.")
     end
   end
 end

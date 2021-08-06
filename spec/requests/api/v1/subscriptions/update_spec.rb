@@ -4,15 +4,10 @@ RSpec.describe 'Customer_Subscriptions API', type: :request do
   describe 'controller update status action' do
     before(:each) do
       Customer.destroy_all
-      # Tea.destroy_all
 
       @customer1 = create(:customer)
       @subscription1 = create(:subscription, status: "active")
       @customer_subscription1 = CustomerSubscription.create(customer_id: @customer1.id, subscription_id: @subscription1.id)
-      
-      # For additional endpoints (extensions)
-      # @tea1 = create(:tea)
-      # @subscription_tea1 = create(:subscription_tea, subscription_id: @subscription1a.id, tea_id: @tea1.id)
     end
 
     # Happy Path
@@ -61,7 +56,7 @@ RSpec.describe 'Customer_Subscriptions API', type: :request do
       
       expect(response).to_not be_successful
       expect(response.status).to eq(404)
-      expect(response.body).to eq("{\"errors\":\"Couldn't find CustomerSubscription with 'id'=999\"}")
+      expect(response.body).to eq("{\"errors\":\"Missing or invalid ID\"}")
     end
     
     it 'can render error if missing params' do
@@ -75,17 +70,8 @@ RSpec.describe 'Customer_Subscriptions API', type: :request do
       customer_sub = JSON.parse(response.body, symbolize_names: true)
 
       expect(response).to_not be_successful
-      expect(response.status).to eq(400)
-      expect(response.body).to eq("{\"errors\":\"Requires valid IDs for customer and subscription.\"}")
+      expect(response.status).to eq(404)
+      expect(response.body).to eq("{\"errors\":\"Missing or invalid ID\"}")
     end
-
-    # it 'can render error if id missing' do
-    #   id = ""
-    #   patch "/api/v1/customer_subscriptions/#{id}", params: {id: id}
-    #   subscription = JSON.parse(response.body, symbolize_names: true)
-    #   expect(response).to_not be_successful
-    #   expect(response.status).to eq(400)
-    #   expect(response.body).to eq("{\"errors\":\"Requires valid IDs for customer_subscription, customer and subscription.\"}")
-    # end
   end
 end
