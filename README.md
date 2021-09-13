@@ -22,7 +22,7 @@ Visit us on [Heroku](https://???.herokuapp.com/) or on [Local Host 3000](http://
 
 
 ## Project Design
-![Diagram](lib/images/brisk-tea-business-api_diagram.png "Project Design")
+![Diagram](lib/images/brisk-tea-business-api_diagram.jpeg "Project Design")
 
 
 ## Setup
