@@ -1,6 +1,6 @@
 class Api::V1::Customers::SubscriptionsController < ApplicationController
   before_action :set_customer
-  before_action :set_tea, only: [create]
+  before_action :set_tea, only: %i[create]
 
   def index
     if @customer.subscriptions.count.zero?

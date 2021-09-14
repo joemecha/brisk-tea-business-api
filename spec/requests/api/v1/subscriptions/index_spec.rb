@@ -29,14 +29,19 @@ RSpec.describe 'Customer Subscriptions API', type: :request do
       expect(response).to be_successful
       expect(response.status).to eq(200)
       
-      # expect(subscriptions[:data]).to be_and(Array)
-      # expect(subscriptions[:data].count).to eq(3)
-      # expect(subscriptions[:data].first[:attributes][:title]).to eq(@subscription1.title)
-      # expect(subscriptions[:data].first[:attributes][:price]).to eq(@subscription1.price)
-      # expect(subscriptions[:data].first[:attributes][:frequency]).to eq(@subscription1.frequency)
-      # expect(subscriptions[:data].last[:attributes][:title]).to eq(@subscription3.title)
-      # expect(subscriptions[:data].last[:attributes][:price]).to eq(@subscription3.price)
-      # expect(subscriptions[:data].last[:attributes][:frequency]).to eq(@subscription3.frequency)
+      expect(subscriptions[:data]).to be_an(Array)
+      expect(subscriptions[:data].count).to eq(3)
+      expect(subscriptions[:data].first[:attributes]).to have_key(:tea_id)
+      expect(subscriptions[:data].first[:attributes]).to have_key(:title)
+      expect(subscriptions[:data].first[:attributes]).to have_key(:price)
+      expect(subscriptions[:data].first[:attributes]).to have_key(:status)
+      expect(subscriptions[:data].first[:attributes][:title]).to eq(@subscription1.title)
+      expect(subscriptions[:data].first[:attributes][:price]).to eq(@subscription1.price)
+      expect(subscriptions[:data].first[:attributes][:frequency]).to eq(@subscription1.frequency)
+      expect(subscriptions[:data].last[:attributes][:title]).to eq(@subscription3.title)
+      expect(subscriptions[:data].last[:attributes][:price]).to eq(@subscription3.price)
+      expect(subscriptions[:data].last[:attributes][:frequency]).to eq(@subscription3.frequency)
+      expect(subscriptions[:data][2][:attributes][:status]).to eq("cancelled")
     end
     
     # Sad Paths    
@@ -47,7 +52,7 @@ RSpec.describe 'Customer Subscriptions API', type: :request do
 
       expect(response).to_not be_successful
       expect(response.status).to eq(404)
-      expect(response.body).to eq("{\"errors\":\"Missing or invalid ID\"}")
+      expect(response.body).to eq("{\"errors\":\"Cannot find customer with ID #{id}\"}")
     end
 
     it 'renders error if no subscriptions exist' do
