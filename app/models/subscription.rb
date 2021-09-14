@@ -3,8 +3,8 @@ class Subscription < ApplicationRecord
   belongs_to :tea
 
   validates :title, :price, :status, :frequency, presence: true
-  validates :price, :frequency, :status, numericality: true
+  validates :price, numericality: true
 
-  enum status: { cancelled: 0, active: 1 }
-  enum frequency: { monthly: 0, bimonthly: 1, trimonthly: 2, biannually: 3 }
+  enum status: [:cancelled, :active]
+  enum frequency: [:monthly, :bimonthly, :trimonthly, :biannually]
 end
