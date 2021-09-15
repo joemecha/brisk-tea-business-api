@@ -47,8 +47,7 @@ The following are all API endpoints. Note, some endpoints have optional or requi
 POST `http://localhost:3000/api/v1/customers/:customer_id/subscriptions` 
 
 body:
-```
-json 
+```json 
 {
     "tea_id": 5,
     "title": "Sidney's Subscription for Sobacha",
@@ -80,8 +79,7 @@ response:
 PATCH `http://localhost:3000/api/v1/customers/:customer_id/subscriptions/:id`
 
 body:
-```
-json 
+```json 
 {
   "status": 0
 }
