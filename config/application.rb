@@ -33,3 +33,9 @@ module BriskTeaBusinessApi
     config.api_only = true
   end
 end
+
+# module TeaErrors
+#   class Application < Rails::Application
+#     config.eager_load_paths += %W(#{config.root}/lib)
+#   end
+# end

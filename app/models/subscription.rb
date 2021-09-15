@@ -1,9 +1,10 @@
 class Subscription < ApplicationRecord
-  has_many :customer_subscriptions, dependent: :destroy
-  has_many :subscription_teas, dependent: :destroy
-  has_many :customers, through: :customer_subscriptions
-  has_many :teas, through: :subscription_teas
+  belongs_to :customer
+  belongs_to :tea
 
   validates :title, :price, :status, :frequency, presence: true
   validates :price, numericality: true
+
+  enum status: { cancelled: 0, active: 1 }
+  enum frequency: { monthly: 0, bimonthly: 1, trimonthly: 2, biannually: 3 }
 end

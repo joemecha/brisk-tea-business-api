@@ -1,7 +1,14 @@
 class ApplicationController < ActionController::API
-  rescue_from ActiveRecord::RecordNotFound, with: :render_not_found_response
+  rescue_from ArgumentError, with: :invalid_params
+  rescue_from ActiveRecord::RecordInvalid, with: :invalid_record
 
-  def render_not_found_response(exception)
-    render json: { errors: exception.message }, status: :not_found
+  private
+
+  def invalid_params(error)
+    render json: { errors: error }, status: :bad_request
+  end
+
+  def invalid_record(error)
+    render json: { errors: error.record.errors.full_messages.to_sentence }, status: :bad_request
   end
 end

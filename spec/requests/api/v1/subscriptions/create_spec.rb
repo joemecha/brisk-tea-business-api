@@ -1,39 +1,93 @@
 require 'rails_helper'
 
 RSpec.describe 'Customer_Subscriptions API', type: :request do
-  describe 'customer_subscriptions controller create action' do
-    before(:each) do
-      Customer.destroy_all
-
-      @customer1 = create(:customer)
-      @subscription1 = create(:subscription, status: "active")
-    end
-    
+  describe 'customer new subscription controller create action' do    
     # Happy Path
-    it 'can render response for creation of new subscription' do
-      post '/api/v1/customer_subscriptions', params: {customer_id: @customer1.id,
-                                             subscription_id: @subscription1.id
-                                            }
-      subscription = JSON.parse(response.body, symbolize_names: true)
+    it "can save a customer's new subscription to the database" do
+      customer = create(:customer)
+      tea = create(:tea)
+
+      headers = {"Content-Type": "application/json"}
+
+      body = {
+        "tea_id": tea.id,
+        "title": "#{customer.first_name}'s Subscription for #{tea.name}",
+        "price": 1500,
+        "frequency": 2
+      }
+
+      post "/api/v1/customers/#{customer.id}/subscriptions", headers: headers, 
+                                             params: body.to_json
+      new_sub = JSON.parse(response.body, symbolize_names: true)
+
       expect(response).to be_successful
       expect(response.status).to eq(201)
-      expect(subscription[:data].count).to eq(3)
-      expect(subscription[:data][:type]).to eq("customer_subscription")
-      expect(subscription[:data][:attributes].count).to eq(3)
-      expect(subscription[:data][:attributes]).to have_key(:customer_id)
-      expect(subscription[:data][:attributes]).to have_key(:subscription_id)
-      expect(subscription[:data][:attributes]).to have_key(:status)
+
+      expect(new_sub[:data]).to be_a(Hash)
+      expect(new_sub[:data][:attributes]).to have_key(:customer_id)
+      expect(new_sub[:data][:attributes]).to have_key(:tea_id)
+      expect(new_sub[:data][:attributes]).to have_key(:title)
+      expect(new_sub[:data][:attributes]).to have_key(:price)
+      expect(new_sub[:data][:attributes]).to have_key(:frequency)
+      expect(new_sub[:data][:attributes]).to have_key(:status)
+      
+      expect(new_sub[:data][:attributes][:customer_id]).to eq(customer.id)
+      expect(new_sub[:data][:attributes][:tea_id]).to eq(tea.id)
+      expect(new_sub[:data][:attributes][:price]).to eq(1500)
+      expect(new_sub[:data][:attributes][:frequency]).to eq("trimonthly")
+      expect(new_sub[:data][:attributes][:status]).to eq("active")
     end
 
     # Sad Paths
-    it 'can render error if params missing' do
-      post "/api/v1/customer_subscriptions/", params: {customer_id: @customer1.id,
-                                                       subscription_id: ""
-                                                      }
-      subscription = JSON.parse(response.body, symbolize_names: true)
+    it 'can render an error message if missing a required parameter in the request body' do
+      customer = create(:customer)
+      tea = create(:tea)
+
+      headers = {"Content-Type": "application/json"}
+
+      body = {
+        "tea_id": tea.id,
+        "title": "#{customer.first_name}'s Subscription for #{tea.name}",
+        "price": 1500,
+      }
+
+      post "/api/v1/customers/#{customer.id}/subscriptions", headers: headers, 
+                                             params: body.to_json
+      new_sub = JSON.parse(response.body, symbolize_names: true)
+
       expect(response).to_not be_successful
       expect(response.status).to eq(400)
-      expect(response.body).to eq("{\"errors\":\"Requires valid customer ID and subscription ID.\"}")
+
+      error = JSON.parse(response.body, symbolize_names: true)
+
+      expect(error).to be_a(Hash)
+      expect(error[:errors]).to eq("Frequency can't be blank")
+    end
+
+    it 'can render an error message if an id does not match an existing tea' do
+      customer = create(:customer)
+      tea = create(:tea)
+
+      headers = {"Content-Type": "application/json"}
+
+      body = {
+        "tea_id": 9999,
+        "title": "#{customer.first_name}'s Subscription for #{tea.name}",
+        "price": 1500,
+        "frequency": 1
+      }
+
+      post "/api/v1/customers/#{customer.id}/subscriptions", headers: headers, 
+                                             params: body.to_json
+      new_sub = JSON.parse(response.body, symbolize_names: true)
+
+      expect(response).to_not be_successful
+      expect(response.status).to eq(404)
+
+      error = JSON.parse(response.body, symbolize_names: true)
+
+      expect(error).to be_a(Hash)
+      expect(error[:errors]).to eq("Cannot find tea with ID 9999")
     end
   end
 end

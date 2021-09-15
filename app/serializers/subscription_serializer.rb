@@ -1,4 +1,4 @@
 class SubscriptionSerializer
   include FastJsonapi::ObjectSerializer
-  attributes :title, :price, :status, :frequency
+  attributes :customer_id, :tea_id, :title, :price, :frequency, :status
 end

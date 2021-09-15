@@ -21,6 +21,7 @@ coverage/
 /tmp/*
 !/log/.keep
 !/tmp/.keep
+.DS_Store
 
 /node_modules
 /yarn-error.log
