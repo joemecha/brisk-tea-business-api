@@ -4,74 +4,55 @@ RSpec.describe 'Customer_Subscriptions API', type: :request do
   describe 'controller update status action' do
     before(:each) do
       Customer.destroy_all
-
-      @customer1 = create(:customer)
-      @subscription1 = create(:subscription, status: "active")
-      @customer_subscription1 = CustomerSubscription.create(customer_id: @customer1.id, subscription_id: @subscription1.id)
+      Tea.destroy_all
+      @customer = create(:customer)
+      @tea = create(:tea)
+      @subscription1 = create(:subscription, customer_id: @customer.id, status: 1)
+      @subscription2 = create(:subscription, customer_id: @customer.id, status: 1)
     end
 
     # Happy Path
     it 'can update customer_subscription status in the database' do
-      expect(@customer_subscription1.status).to eq("active")
+      expect(@subscription1.status).to eq("active")
+      expect(@subscription2.status).to eq("active")
       
-      id = @customer_subscription1.id
-      customer_subscription_params = { customer_id: @customer_subscription1.customer_id,
-                                       subscription_id: @customer_subscription1.subscription_id
-                                      }
-      headers = {"CONTENT_TYPE" => "application/json"}
-      
-      patch "/api/v1/customer_subscriptions/#{id}", headers: headers, params: JSON.generate({customer_subscription: customer_subscription_params})
+      headers = {
+        'Content-Type': "application/json"
+      }
 
-      cancelled_customer_sub = CustomerSubscription.find_by(customer_subscription_params)
-      expect(cancelled_customer_sub.status).to eq("cancelled")
-    end
+      body = {
+        "status": 0
+      }
 
-    it 'can render response for update of subscription status' do
-      id = @customer_subscription1.id
-      customer_subscription_params = { customer_id: @customer_subscription1.customer_id,
-                                       subscription_id: @customer_subscription1.subscription_id
-                                      }
-      headers = {"CONTENT_TYPE" => "application/json"}
-      
-      patch "/api/v1/customer_subscriptions/#{id}", headers: headers, params: JSON.generate({customer_subscription: customer_subscription_params})
+      patch "/api/v1/customers/#{@customer.id}/subscriptions/#{@subscription2.id}", headers: headers, params: body.to_json
+      subscription = JSON.parse(response.body, symbolize_names: true)
 
-      cancelled_customer_sub = JSON.parse(response.body, symbolize_names: true)
-      
       expect(response).to be_successful
       expect(response.status).to eq(200)
-      expect(cancelled_customer_sub[:data].count).to eq(3)
-      expect(cancelled_customer_sub[:data][:attributes][:status]).to eq("cancelled")
+
+      expect(subscription[:data][:id].to_i).to eq(@subscription2.id)
+      expect(subscription[:data][:attributes][:status]).to eq("cancelled")
     end
 
     # Sad Paths
-    it 'can render error if customer_subscription does not exist' do
-      customer_subscription_params = { customer_id: @customer_subscription1.customer_id,
-                                       subscription_id: @customer_subscription1.subscription_id
-                                      }
-      headers = {"CONTENT_TYPE" => "application/json"}
+    it 'can render error if invalid status given' do
+      expect(@subscription1.status).to eq("active")
+      expect(@subscription2.status).to eq("active")
+      
+      headers = {
+        'Content-Type': "application/json"
+      }
 
-      patch "/api/v1/customer_subscriptions/999", headers: headers, params: JSON.generate({customer_subscription: customer_subscription_params})
-      
-      customer_sub = JSON.parse(response.body, symbolize_names: true)
-      
-      expect(response).to_not be_successful
-      expect(response.status).to eq(404)
-      expect(response.body).to eq("{\"errors\":\"Missing or invalid ID\"}")
-    end
-    
-    it 'can render error if missing params' do
-      customer_subscription_params = { customer_id: @customer_subscription1.customer_id,
-                                       subscription_id: ""
-                                      }
-      headers = {"CONTENT_TYPE" => "application/json"}
+      body = {
+        "status": 99
+      }
 
-      patch "/api/v1/customer_subscriptions/#{@customer_subscription1.id}", headers: headers, params: JSON.generate({customer_subscription: customer_subscription_params})
-      
-      customer_sub = JSON.parse(response.body, symbolize_names: true)
+      patch "/api/v1/customers/#{@customer.id}/subscriptions/#{@subscription2.id}", headers: headers, params: body.to_json
+      subscription = JSON.parse(response.body, symbolize_names: true)
 
       expect(response).to_not be_successful
-      expect(response.status).to eq(404)
-      expect(response.body).to eq("{\"errors\":\"Missing or invalid ID\"}")
+      expect(response.status).to eq(400)
+      expect(subscription[:errors]).to eq("'99' is not a valid status")
     end
   end
 end

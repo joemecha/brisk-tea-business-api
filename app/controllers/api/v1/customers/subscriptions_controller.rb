@@ -16,7 +16,7 @@ class Api::V1::Customers::SubscriptionsController < ApplicationController
   end
 
   def update
-    subscription = @customer.subscription.find(params[:id])
+    subscription = @customer.subscriptions.find(params[:id])
     subscription.update(subscription_params)
     render json: SubscriptionSerializer.new(subscription), status: :ok
   end
