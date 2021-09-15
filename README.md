@@ -43,64 +43,47 @@ The following are all API endpoints. Note, some endpoints have optional or requi
 
 | Method   | URI                                      | Description                              |
 | -------- | ---------------------------------------- | ---------------------------------------- |
-| `GET`    | `/api/v1/customers/:customer_id/subscriptions`     | Retrieve all subscriptions for a single customer.  |
-| `POST`   | `/api/v1/customers/:customer_id/subscriptions`         | Create a new subscription for a customer.          |
-| `PATCH`  | `/api/v1/customer_subscriptions/:id`     | Update a subscription status to 'cancelled'.  |
-
+| `POST`   | `/api/v1/customer_subscriptions`         | Create a customer subscription.          |
+| `PATCH`  | `/api/v1/customer_subscriptions/:id`     | Customer subscription to status 'cancelled'.  |
+| `GET`    | `/api/v1/customer_subscriptions/:customer_id`     | Retrieve all subscriptions for a single customer.  |
 
 #### Endpoint to subscribe a customer to a tea subscription:
-POST `http://localhost:3000/api/v1/customers/:customer_id/subscriptions`, 
+POST `http://localhost:3000/api/v1/customers/:customer_id/subscriptions` 
 
 body:
 ```
 json 
 {
-  "customer_id": "1",
-  "subscription_id": "1"
+    "tea_id": 1,
+    "title": "Benji's Subscription for Sencha",
+    "price": 1500,
+    "frequency": 2
 }
 ```
 
 response: 
 ```
 {
-    "data": {
-        "id": "1",
-        "type": "customer_subscription",
-        "attributes": {
-            "id": "1",
-            "customer_id": "1",
-            "subscription_id": "1",
-            "status": "active"
-        }
-    }
+   
 }
 ```
 
 
 #### Endpoint to cancel a customer’s tea subscription:
-PATCH/PUT `http://localhost:3000/api/v1/customers/:customer_id/subscriptions/:id`
+PATCH `http://localhost:3000/api/v1/customers/:customer_id/subscriptions/:id`
 
 body:
 ```
 json 
 {
-  "customer_id": "1",
-  "subscription_id": "2"
+  "status": 0
 }
 ```
 
 response: 
 ```
 {
-    "data": {
-        "id": "2",
-        "type": "customer_subscription",
-        "attributes": {
-            "customer_id": "1",
-            "subscription_id": "2",
-            "status": "cancelled"
-        }
-    }
+
 }
 ```
 
@@ -111,26 +94,7 @@ GET `http://localhost:3000/api/v1/customers/:customer_id/subscriptions`
 response: 
 ```
 {
-    "data": ["data": {
-        "id": "1",
-        "type": "subscription",
-        "attributes": {
-            "id": "1",
-            "title": "Cassidy Gongmei Tea Box"
-            "price": "6400"
-            "status": "active"
-            "frequency": "6"
-        }, 
-        "id": "2",
-        "type": "subscription",
-        "attributes": {
-            "id": "2",
-            "title": "Ripple Valerian Tea Box"
-            "price": "3700"
-            "status": "cancelled"
-            "frequency": "6"
-        } 
-    }]
+  
 }
 ```
 
@@ -138,12 +102,6 @@ response:
 ## Running the Tests
 
 Run all tests in application with `bundle exec rspec`. When test is complete, run `open coverage` to see where tests are being run and where they are not.
-
-
-<!-- ## Deployment
-
-- To run this app locally, run `rails s` and navigate to `http://localhost:3000/` in your browser.
-- To run this app on Heroku, go to https://downdraft-backend.herokuapp.com/ -->
 
 
 ## Developer
