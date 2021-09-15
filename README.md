@@ -5,17 +5,13 @@ BriskTea Business is a RESTful back-end API which exposes Tea Subscription data.
 
 
 ## Table of contents
-<!-- [**Getting Started**](#getting-started) | -->
 [**Versions**](#versions) |
 [**Project Design**](#project-design) |
 [**Setup**](#setup) |
 [**Endpoints**](#endpoints) |
 [**Tests**](#running-the-tests) |
 [**Developer**](#developer) |
-<!-- [**Deployment**](#deployment) | -->
 
-<!-- ## Getting Started
-Visit us on [Heroku](https://???.herokuapp.com/) or on [Local Host 3000](http://localhost:3000/) to get started with the steps below. -->
 
 ## Versions
 * Ruby 2.5.3
@@ -54,8 +50,8 @@ body:
 ```
 json 
 {
-    "tea_id": 1,
-    "title": "Benji's Subscription for Sencha",
+    "tea_id": 5,
+    "title": "Sidney's Subscription for Sobacha",
     "price": 1500,
     "frequency": 2
 }
@@ -64,7 +60,18 @@ json
 response: 
 ```
 {
-   
+    "data": {
+        "id": "7",
+        "type": "subscription",
+        "attributes": {
+            "customer_id": 5,
+            "tea_id": 5,
+            "title": "Sidney's Subscription for Sobacha",
+            "price": 1500,
+            "frequency": "trimonthly",
+            "status": "active"
+        }
+    }
 }
 ```
 
@@ -83,7 +90,18 @@ json
 response: 
 ```
 {
-
+    "data": {
+        "id": "6",
+        "type": "subscription",
+        "attributes": {
+            "customer_id": 1,
+            "tea_id": 1,
+            "title": "Benji's Subscription for Sencha,
+            "price": 1500,
+            "frequency": "trimonthly",
+            "status": "cancelled"
+        }
+    }
 }
 ```
 
@@ -94,14 +112,39 @@ GET `http://localhost:3000/api/v1/customers/:customer_id/subscriptions`
 response: 
 ```
 {
-  
+    "data": [
+        {
+            "id": "5",
+            "type": "subscription",
+            "attributes": {
+                "customer_id": 5,
+                "tea_id": 1,
+                "title": "Sidney's Subscription for Xinyang Maojian",
+                "price": 500,
+                "frequency": "monthly",
+                "status": "active"
+            }
+        },
+        {
+            "id": "7",
+            "type": "subscription",
+            "attributes": {
+                "customer_id": 5,
+                "tea_id": 5,
+                "title": "Sidney's Subscription for Sobacha",
+                "price": 1500,
+                "frequency": "trimonthly",
+                "status": "active"
+            }
+        }
+    ]
 }
 ```
 
 
 ## Running the Tests
 
-Run all tests in application with `bundle exec rspec`. When test is complete, run `open coverage` to see where tests are being run and where they are not.
+Run all tests in application with `bundle exec rspec`. When test is complete, run `open coverage/index.html` to see where tests are being run and where they are not.
 
 
 ## Developer
