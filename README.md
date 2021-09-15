@@ -3,6 +3,7 @@
 ## About
 BriskTea Business is a RESTful back-end API which exposes Tea Subscription data.
 
+
 ## Table of contents
 <!-- [**Getting Started**](#getting-started) | -->
 [**Versions**](#versions) |
@@ -42,13 +43,13 @@ The following are all API endpoints. Note, some endpoints have optional or requi
 
 | Method   | URI                                      | Description                              |
 | -------- | ---------------------------------------- | ---------------------------------------- |
-| `POST`   | `/api/v1/customer_subscriptions`         | Create a customer subscription.          |
-| `PATCH`  | `/api/v1/customer_subscriptions/:id`     | Customer subscription to status 'cancelled'.  |
-| `GET`    | `/api/v1/customer_subscriptions/:customer_id`     | Retrieve all subscriptions for a single customer.  |
+| `GET`    | `/api/v1/customers/:customer_id/subscriptions`     | Retrieve all subscriptions for a single customer.  |
+| `POST`   | `/api/v1/customers/:customer_id/subscriptions`         | Create a new subscription for a customer.          |
+| `PATCH`  | `/api/v1/customer_subscriptions/:id`     | Update a subscription status to 'cancelled'.  |
 
 
 #### Endpoint to subscribe a customer to a tea subscription:
-POST `http://localhost:3000/api/v1/customer_subscription`, 
+POST `http://localhost:3000/api/v1/customers/:customer_id/subscriptions`, 
 
 body:
 ```
@@ -77,7 +78,7 @@ response:
 
 
 #### Endpoint to cancel a customer’s tea subscription:
-PATCH/PUT `http://localhost:3000/api/v1/customer_subscription/:customer_id`
+PATCH/PUT `http://localhost:3000/api/v1/customers/:customer_id/subscriptions/:id`
 
 body:
 ```
@@ -105,7 +106,7 @@ response:
 
 
 #### Endpoint to see all of a customer’s subsciptions (active and cancelled):
-GET `http://localhost:3000/api/v1/customer_subscription/:customer_id`
+GET `http://localhost:3000/api/v1/customers/:customer_id/subscriptions`
 
 response: 
 ```
